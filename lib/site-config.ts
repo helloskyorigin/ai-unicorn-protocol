@@ -9,7 +9,8 @@ function publicUrl(value: string | undefined): string | null {
   try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; }
   catch { return null; }
 }
-const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || '';
+const publisherEmail = 'hello.skyorigin@gmail.com';
+const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || publisherEmail;
 export const siteConfig = {
   title: 'THE AI UNICORN PROTOCOL',
   edition: '2027 Edition',
@@ -17,10 +18,13 @@ export const siteConfig = {
   currency: 'USD',
   checkoutUrl: LIVE_DODO_CHECKOUT_URL,
   purchaseLabel: 'Get the Complete Book — $9',
-  contactEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null,
-  privacyUrl: publicUrl(process.env.NEXT_PUBLIC_PRIVACY_URL),
-  termsUrl: publicUrl(process.env.NEXT_PUBLIC_TERMS_URL),
-  refundUrl: publicUrl(process.env.NEXT_PUBLIC_REFUND_URL),
+  contactEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : publisherEmail,
+  contactUrl: '/contact/',
+  privacyUrl: publicUrl(process.env.NEXT_PUBLIC_PRIVACY_URL) || '/privacy/',
+  termsUrl: publicUrl(process.env.NEXT_PUBLIC_TERMS_URL) || '/terms/',
+  refundUrl: publicUrl(process.env.NEXT_PUBLIC_REFUND_URL) || '/refunds/',
+  dodoBuyerTermsUrl: 'https://dodopayments.com/legal/buyer-terms',
+  dodoPrivacyUrl: 'https://dodopayments.com/legal/privacy-policy',
   siteUrl: publicUrl(process.env.NEXT_PUBLIC_SITE_URL) ||
     (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` :
       process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null),

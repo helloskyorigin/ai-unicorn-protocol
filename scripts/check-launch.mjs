@@ -24,6 +24,20 @@ assert.equal(book.offers.url, checkout);
 assert.equal(book.numberOfPages, 179);
 for (let page = 1; page <= 5; page++) assert.ok(html.includes(`/preview/page-${page}.webp`));
 assert.ok(html.includes('/images/share.jpg'));
+for (const route of ['contact', 'privacy', 'terms', 'refunds']) {
+  const footerLabel = { contact: 'Contact', privacy: 'Privacy', terms: 'Terms', refunds: 'Refund policy' }[route];
+  const footerLink = links.find(([, , body]) => body.replace(/<[^>]*>/g, '').trim() === footerLabel);
+  const destination = footerLink?.[1].match(/href="([^"]+)"/)?.[1];
+  assert.ok(destination === '/' + route + '/' || destination?.startsWith('https://'), 'Footer must link to the real ' + route + ' page');
+  const policy = await readFile('out/' + route + '/index.html', 'utf8');
+  assert.ok(policy.includes('mailto:hello.skyorigin@gmail.com'), 'Publisher email must be usable on ' + route);
+  assert.ok(!/Details coming soon|has not added/.test(policy), 'Policy pages must not contain placeholders');
+  const policyPurchases = [...policy.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)]
+    .filter(([, attributes, body]) => body.replace(/<[^>]*>/g, '').trim() === label);
+  assert.equal(policyPurchases.length, 1);
+  assert.equal(policyPurchases[0][1].match(/href="([^"]+)"/)?.[1], checkout);
+}
+assert.ok(!/Details coming soon|has not added/.test(html));
 
 async function walk(directory) {
   const files = [];
@@ -37,4 +51,4 @@ const pdfs = (await walk('out')).filter(path => /\.pdf$/i.test(path));
 assert.deepEqual(pdfs, ['out/preview/the-ai-unicorn-protocol-preview.pdf']);
 const audit = JSON.parse(await readFile('asset-verification.json', 'utf8'));
 assert.equal(createHash('sha256').update(await readFile(pdfs[0])).digest('hex'), audit.sourcePreviewSha256);
-console.log('Passed: four exact live checkout CTAs, $9 metadata, five preview pages, and no public paid PDF.');
+console.log('Passed: live checkout CTAs, contact and policy routes, $9 metadata, five preview pages, and no public paid PDF.');

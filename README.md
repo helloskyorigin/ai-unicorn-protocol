@@ -37,13 +37,13 @@ The approved link is already the default in `lib/site-config.ts`; no environment
 
 Dodo owns payment, confirmation, and email delivery. The website has no payment backend, purchase-verification query string, success redirect, or paid-PDF download route. It does not create a new checkout or delivery system. No purchase transaction or post-payment email delivery is claimed as tested.
 
-Publisher contact and policy fields remain editable using `.env.example`. No refund terms, contact address, or privacy promises are invented. See [Dodo flow](docs/DODO_SETUP.md) and [QA notes](docs/QA.md).
+Publisher support is configured as **hello.skyorigin@gmail.com**. The included **/contact/**, **/privacy/**, **/terms/**, and **/refunds/** pages are linked from the footer. They cover the digital-book purchase, license, delivery, support, privacy, and refund requests under Dodo Buyer Terms and applicable consumer rights. No fixed refund window or guaranteed approval has been invented. Optional publisher/policy overrides remain in `.env.example`. See [Dodo flow](docs/DODO_SETUP.md) and [QA notes](docs/QA.md).
 
 ## Deploy to Vercel
 
 1. Use the existing repository: `helloskyorigin/ai-unicorn-protocol`.
 2. Import that repository into Vercel. Use the Next.js preset and Node.js 22/24.
-3. Set publisher contact/policy fields from `.env.example` in Project Settings → Environment Variables. The approved live checkout is already configured; remove any stale checkout environment override or set it to the exact approved link.
+3. Contact details and the included policy pages work by default. Optional external policy URLs can be configured from `.env.example`. The approved live checkout is already configured; remove any stale checkout environment override or set it to the exact approved link.
 4. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS domain. The supplied `vercel.json` builds and serves the static `out` directory.
 5. Deploy. Verify sample downloads, viewer controls, policy links, the real $9 checkout, and Dodo delivery before advertising that sales are live.
 
@@ -57,11 +57,13 @@ The full 179-page PDF is intentionally **not included in this repository, public
 
 - `lib/site-config.ts`: publication constants and validated public configuration.
 - `components/book-preview.tsx`: native swipe/scroll-snap viewer, arrow keys, expanded dialog, zoom, and genuine page renders.
-- `components/publication-actions.tsx`: consistent live purchase links, configurable publisher links, and a restrained mobile sticky CTA.
+- `components/publication-actions.tsx`: consistent live purchase links, real contact/policy links, and a restrained mobile sticky CTA.
 - `app/page.tsx`: all five editorial sections and verified product metadata.
+- `app/contact/`, `app/privacy/`, `app/terms/`, `app/refunds/`: complete customer-facing purchase information.
+- `components/policy-layout.tsx`: shared editorial layout and purchase-support details for those pages.
 - `app/globals.css`: responsive publication design with reduced-motion support.
 - `asset-verification.json`: input verification and paid-file exclusion record.
-- `scripts/check-launch.mjs`: verifies all four rendered checkout links, labels, metadata, and public-PDF exclusion after building.
+- `scripts/check-launch.mjs`: verifies the four landing-page checkout links, policy-page purchase links, publisher email, legal routes, metadata, and public-PDF exclusion after building.
 
 The page uses no analytics, email capture, payment SDK, or third-party animation library. Dodo is responsible for the already-configured checkout and customer delivery.
 
