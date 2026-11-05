@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+.vercel/
+*.tsbuildinfo
+
+# Local preview state and private paid-book files
+.openai/
+private/
+*Production_Final*.pdf
