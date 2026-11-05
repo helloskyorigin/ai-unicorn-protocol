@@ -1,27 +1,21 @@
-# Dodo Payments: checkout and private book delivery
+# Live Dodo checkout and existing digital delivery
 
-Configuration instructions checked against Dodo's official documentation on November 5, 2026:
-https://docs.dodopayments.com/features/digital-product-delivery
+The existing product and delivery setup are preserved. No new product, checkout, API integration, webhook, or file delivery endpoint is required.
 
-## Dashboard setup
+## Approved link
 
-1. Create a **one-time** product for The AI Unicorn Protocol — 2027 Edition at **$9 USD**. Confirm tax/currency behavior in your account.
-2. In **Entitlements**, create an entitlement of type **Digital Files**.
-3. Upload the supplied `The_AI_Unicorn_Protocol_2027_Production_Final.pdf` directly to that entitlement. Do not place it in this website or use a public download link.
-4. Add brief delivery instructions identifying it as the 179-page digital PDF. Save the entitlement.
-5. Open the product's **Entitlements** section and attach the Digital Files entitlement.
-6. Obtain the real hosted checkout/payment link for this product from your Dodo dashboard. Paste it into `NEXT_PUBLIC_DODO_CHECKOUT_URL` in Vercel or `.env.local`, then rebuild and deploy.
-7. Add the publisher's real contact, privacy, terms, and refund-policy URLs using `.env.example`. Review the complete purchase flow before announcing availability.
+https://checkout.dodopayments.com/buy/pdt_0NrI93lJvUpzx9dstH48K?quantity=1
 
-Dodo delivers the attached file after successful payment through its email and Customer Portal. Its hosted files use short-lived download URLs; do not hardcode those URLs in this website. Legacy product-level delivery is migrated to Digital Files entitlements; edit the entitlement as the source of truth.
+The checkout was opened on November 5, 2026. With the currency selector set to USD, it showed **The AI Unicorn Protocol — 2027 Edition**, **$9.00** base price, and **1 entitlement included → Digital Files**. With the observed India billing country, GST was $0.45 and total $9.45. Taxes and local-currency amounts vary with checkout configuration and customer location.
 
-## Verification to perform in the merchant account
+The website's four purchase actions all use the approved link, with no added query parameters. The label is **Get the Complete Book — $9**. The public link is the source default; the optional NEXT_PUBLIC_DODO_CHECKOUT_URL must match it exactly.
 
-- Use the correct test environment and a test product/link first.
-- Confirm the product title, **$9 one-time price**, and taxes/currency shown at checkout.
-- Complete a successful supported test payment; verify delivery email and the correct 179-page PDF.
-- Open the Customer Portal and verify that download access can be recovered.
-- Test cancellation and unsuccessful payment: no website download should be granted.
-- Switch to the real live product/link, rebuild, and verify the live product details.
+## After payment
 
-No checkout or delivery transaction is claimed as tested in this project. No Dodo API key is needed for the hosted-link plus native-delivery approach. A query string such as `?paid=true` is never treated as proof of purchase.
+Dodo handles confirmation and its existing Digital Files entitlement. Customers should check their inbox for the book download email, then Spam or Promotions if it is missing. No complete paid PDF is hosted by this website.
+
+No separate thank-you page or post-payment redirect was added. The existing Dodo confirmation and delivery flow remains intact. Opening a URL such as ?paid=true never grants a download or counts as verified payment.
+
+No live payment, card entry, or successful-purchase email test was performed. The merchant can use Dodo's supported test flow to verify actual post-payment delivery independently.
+
+Official delivery reference: https://docs.dodopayments.com/features/digital-product-delivery

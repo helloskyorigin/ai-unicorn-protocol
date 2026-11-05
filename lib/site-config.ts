@@ -1,14 +1,8 @@
-/** One place to configure the publication. No credentials or paid file URLs belong here. */
-export function dodoCheckoutUrl(value: string | undefined): string | null {
-  if (!value?.trim()) return null;
-  try {
-    const url = new URL(value.trim());
-    const host = url.hostname.toLowerCase();
-    if (url.protocol !== 'https:' || url.username || url.password ||
-      !(host === 'dodopayments.com' || host.endsWith('.dodopayments.com')) ||
-      url.pathname === '/') return null;
-    return url.href;
-  } catch { return null; }
+/** The approved live product link is public. Never add credentials or a paid file URL. */
+export const LIVE_DODO_CHECKOUT_URL = 'https://checkout.dodopayments.com/buy/pdt_0NrI93lJvUpzx9dstH48K?quantity=1';
+const configuredCheckout = process.env.NEXT_PUBLIC_DODO_CHECKOUT_URL?.trim();
+if (configuredCheckout && configuredCheckout !== LIVE_DODO_CHECKOUT_URL) {
+  throw new Error('NEXT_PUBLIC_DODO_CHECKOUT_URL must match the approved live Dodo product URL.');
 }
 function publicUrl(value: string | undefined): string | null {
   if (!value) return null;
@@ -21,7 +15,8 @@ export const siteConfig = {
   edition: '2027 Edition',
   price: 9,
   currency: 'USD',
-  checkoutUrl: dodoCheckoutUrl(process.env.NEXT_PUBLIC_DODO_CHECKOUT_URL),
+  checkoutUrl: LIVE_DODO_CHECKOUT_URL,
+  purchaseLabel: 'Get the Complete Book — $9',
   contactEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null,
   privacyUrl: publicUrl(process.env.NEXT_PUBLIC_PRIVACY_URL),
   termsUrl: publicUrl(process.env.NEXT_PUBLIC_TERMS_URL),

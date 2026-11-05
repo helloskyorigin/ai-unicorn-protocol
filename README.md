@@ -18,25 +18,32 @@ Visit the URL printed by Next.js. For release checks:
 npm run typecheck
 npm run check:assets
 npm run build
+npm run check:launch
 ```
 
 After building, `npm start` serves a local production preview at http://localhost:3000.
 
 `next build` creates `out/`. The page is fully static and requires no database, login, API key, or backend.
 
-## Connect checkout
+## Live hosted checkout
 
-Set `NEXT_PUBLIC_DODO_CHECKOUT_URL` to the actual hosted Dodo checkout link for the **$9 USD one-time product**. Only valid HTTPS Dodo-domain URLs are accepted. The example value is deliberately blank; there is no fake checkout. Rebuild after changing any `NEXT_PUBLIC_` variable.
+Every purchase CTA uses the approved live Dodo link and the label **Get the Complete Book — $9**:
 
-Until connected, purchase buttons open an honest “Checkout is being connected” dialog. They do not simulate payment. Set publisher contact and policy fields in `.env.local` or Vercel environment settings; missing fields open a clear pending-information message. No refund terms, contact address, or privacy promises are invented.
+https://checkout.dodopayments.com/buy/pdt_0NrI93lJvUpzx9dstH48K?quantity=1
 
-See [Dodo setup](docs/DODO_SETUP.md) for secure digital fulfillment. Checkout and fulfillment have not been transaction-tested because no product checkout URL was supplied.
+The live product's USD base price was verified as **$9.00** on November 5, 2026. Applicable taxes and currency conversion are displayed by Dodo. Its checkout shows the correct book and an included Digital Files entitlement.
+
+The approved link is already the default in `lib/site-config.ts`; no environment variable is needed to activate it. If `NEXT_PUBLIC_DODO_CHECKOUT_URL` is set, it must match the exact approved link. A different or stale link fails the build instead of sending customers to another product.
+
+Dodo owns payment, confirmation, and email delivery. The website has no payment backend, purchase-verification query string, success redirect, or paid-PDF download route. It does not create a new checkout or delivery system. No purchase transaction or post-payment email delivery is claimed as tested.
+
+Publisher contact and policy fields remain editable using `.env.example`. No refund terms, contact address, or privacy promises are invented. See [Dodo flow](docs/DODO_SETUP.md) and [QA notes](docs/QA.md).
 
 ## Deploy to Vercel
 
-1. Push this project to a new GitHub repository, or import it with the Vercel CLI.
+1. Use the existing repository: `helloskyorigin/ai-unicorn-protocol`.
 2. Import that repository into Vercel. Use the Next.js preset and Node.js 22/24.
-3. Set the variables from `.env.example` in Project Settings → Environment Variables. Use a live Dodo link for production and a separate test link for preview if desired.
+3. Set publisher contact/policy fields from `.env.example` in Project Settings → Environment Variables. The approved live checkout is already configured; remove any stale checkout environment override or set it to the exact approved link.
 4. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS domain. The supplied `vercel.json` builds and serves the static `out` directory.
 5. Deploy. Verify sample downloads, viewer controls, policy links, the real $9 checkout, and Dodo delivery before advertising that sales are live.
 
@@ -50,12 +57,13 @@ The full 179-page PDF is intentionally **not included in this repository, public
 
 - `lib/site-config.ts`: publication constants and validated public configuration.
 - `components/book-preview.tsx`: native swipe/scroll-snap viewer, arrow keys, expanded dialog, zoom, and genuine page renders.
-- `components/publication-actions.tsx`: consistent purchase links, missing-configuration dialogs, publisher links, and restrained mobile sticky CTA.
+- `components/publication-actions.tsx`: consistent live purchase links, configurable publisher links, and a restrained mobile sticky CTA.
 - `app/page.tsx`: all five editorial sections and verified product metadata.
 - `app/globals.css`: responsive publication design with reduced-motion support.
 - `asset-verification.json`: input verification and paid-file exclusion record.
+- `scripts/check-launch.mjs`: verifies all four rendered checkout links, labels, metadata, and public-PDF exclusion after building.
 
-The page uses no analytics, email capture, payment SDK, or third-party animation library. Dodo is responsible for checkout and customer delivery; its dashboard settings must be configured by the merchant.
+The page uses no analytics, email capture, payment SDK, or third-party animation library. Dodo is responsible for the already-configured checkout and customer delivery.
 
 ## Verified release and remaining setup
 

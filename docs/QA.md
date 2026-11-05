@@ -1,24 +1,26 @@
-# Release QA — November 5, 2026
+# Launch QA — November 5, 2026
 
-## Passed
+## Build and asset checks
 
-- Inspected the supplied 179-page full PDF and exact five-page preview. Verified 21 chapters, seven parts, eight researched case files, the scorecard, founder toolkit, and ninety-day roadmap against the book.
-- Used the actual supplied cover and 3D mockup; optimized them to WebP. Viewer pages are genuine PDF renders. Scorecard and roadmap excerpts are actual pages 4 and 133.
-- Production build, TypeScript check, and public-asset/privacy checks pass. Local static production server returns the page, optimized imagery, and exact sample PDF with HTTP 200; PDF attachment header and SHA-256 verified. Missing routes return 404.
-- Browser inspected at 360, 390, 430, 768, and 1440 CSS-pixel iframe viewports, plus the native desktop browser viewport. No horizontal document overflow. Mobile hero, actual mockup, purchase action, preview controls, and sticky CTA visually inspected. No broken images observed.
-- Desktop and phone preview navigation tested. The current page follows the centered page. Previous/next bounds, keyboard navigation, expanded view, zoom in/out, and Escape dismissal tested.
-- FAQ disclosure and pending publisher-information dialog tested. Missing-checkout dialog tested and clearly states payments are unavailable.
-- Actual public sample URL opened successfully in the browser PDF reader, displaying five pages. Sample SHA-256 matches the supplied PDF. Native automated download capture timed out; Vercel and local production headers explicitly serve the PDF as a named attachment. Verify a normal browser download on the final domain.
-- Reduced-motion styles, semantic landmarks, image descriptions, focus indicators, touch controls, modal labeling, and a skip link are included.
-- The paid 179-page PDF is absent from source, public assets, exported site, and delivery ZIP. No API keys or payment secrets are included.
+- Production Next.js build, TypeScript, check:assets, and check:launch pass.
+- The exported landing page contains four purchase links: header, hero, final purchase section, and mobile sticky bar. Every href is the exact supplied live Dodo URL; every label is Get the Complete Book — $9.
+- Structured product metadata uses USD 9.00 and the same official checkout URL. Sharing imagery uses the actual official cover. Configure NEXT_PUBLIC_SITE_URL with the final HTTPS domain; Vercel's deployment URL is used automatically when available.
+- The original cover, 3D mockup, and five genuine page images are preserved. The only PDF in public/ and out/ is the official five-page preview. Its SHA-256 matches the supplied sample; no complete paid PDF is in the repository or export.
 
-## Merchant configuration required
+## Browser checks
 
-- Set the real NEXT_PUBLIC_DODO_CHECKOUT_URL. No URL was supplied; no payment or digital fulfillment transaction has been tested.
-- Attach the full PDF through Dodo Digital Files entitlements. Follow DODO_SETUP.md.
-- Set the actual publisher contact and privacy/terms/refund URLs. No policies or contact information have been invented.
-- Set NEXT_PUBLIC_SITE_URL to the final HTTPS domain, then rebuild for canonical/social metadata.
+- Completed landing page → Read 5 Pages Free → page navigation → expanded page/zoom → purchase CTA → Dodo checkout. The checkout opened the correct book.
+- Verified all four link labels and exact hrefs in the rendered page, including the mobile sticky bar.
+- Rechecked at 360, 390, 430, and 768 CSS-pixel iframe widths and the desktop browser viewport. No document overflow or broken loaded images. The mobile header and full-width sticky purchase link fit without covering reader controls.
+- Next/Previous, keyboard navigation, page counter, expanded view, zoom, and Escape dismissal work. Horizontal scrolling remains native to the reader; no login or payment is required to read it.
+- Free preview URL, filename, exact file hash, and production attachment response are verified. Browser automation could not capture the native download event; verify a normal download once the final domain is deployed.
 
-## Deployment status
+## Verified live product
 
-The connected Vercel account returned 403 Forbidden when creating the new project. No Vercel deployment was created, and the temporary local preview is not a public production deployment. The complete source and deployment instructions are included for the user's authorized fallback.
+Opening the exact supplied hosted link showed The AI Unicorn Protocol — 2027 Edition and one included Digital Files entitlement. Selecting USD showed a **$9.00 base price**. With the observed India billing country, GST was $0.45 and total $9.45. The website clearly states that applicable taxes are shown at checkout; amounts can vary with customer location/currency.
+
+No card details were entered and no purchase was submitted. Successful-payment email delivery was not transaction-tested. The merchant's existing Dodo delivery setup is preserved, with no new product, API, payment backend, download endpoint, success page, or redirect.
+
+## Publisher and deployment configuration
+
+The publisher's contact and privacy/terms/refund fields remain editable and have not been invented. Set the actual details before public promotion. No Vercel project linked to this repository was returned during this update. This QA preview verifies the built code, not a public production deployment; import/deploy the latest main branch using the existing Vercel configuration.
